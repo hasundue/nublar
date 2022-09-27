@@ -38,5 +38,5 @@ jobs:
           tag: '${{ env.NEW_TAG }}'
           name: '${{ env.NEW_TAG }}'
           bodyFile: 'CHANGELOG.md'
-          draft: false
+          draft: true
           token: ${{ secrets.GITHUB_TOKEN }}

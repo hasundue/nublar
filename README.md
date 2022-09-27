@@ -1,12 +1,38 @@
-# boilerplate-deno
+# dsm - Deno Script Manager
 
 ![Test](https://github.com/hasundue/boilerplate-deno/actions/workflows/test.yml/badge.svg)
 [![codecov](https://codecov.io/gh/hasundue/boilerplate-deno/branch/main/graph/badge.svg?token=7BS432RAXB)](https://codecov.io/gh/hasundue/boilerplate-deno)
 
-A boilerplate for Deno projects. Only depends on Deno.
+A CLI Utility to manage your scripts installed via `deno install`.
 
-## Features
+> **Warning**\
+> Still an alpha version.
 
-- Format, lint, test, and coverage with built-in functions of Deno
-- Semantic release by [ghlog](https://github.com/hasundue/ghlog)
-- Dependency update by [udd](https://github.com/hayd/deno-udd)
+## Installation
+
+```sh
+deno install --allow-read --allow-write --allow-env --allow-net https://deno.land/x/dsm@0.1.0/dsm.ts
+```
+
+## Usage
+
+```sh
+$ dsm -h
+
+  Usage:   dsm
+  Version: 0.1.0
+
+  Description:
+
+    Deno Script Manager
+
+  Options:
+
+    -h, --help     - Show this help.
+    -V, --version  - Show the version number for this program.
+
+  Commands:
+
+    update  - Update all installed scripts
+    list    - list all installed scripts
+```
