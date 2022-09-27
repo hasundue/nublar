@@ -1,4 +1,4 @@
-name: Release
+name: CI
 
 on:
   push:
@@ -10,9 +10,14 @@ env:
   api_token: ${{ secrets.API_TOKEN }}
 
 jobs:
+  test:
+    name: Test
+    uses: ./.github/workflows/test.yml
+
   release:
     name: Release
     if: ${{ github.repository_owner == 'hasundue' }}
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
