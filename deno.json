@@ -1,6 +1,6 @@
 {
   "tasks": {
-    "test": "deno test",
+    "test": "deno test --allow-read --allow-write --allow-env --allow-net --allow-run",
     "run": "deno run --allow-read --allow-write --allow-env --allow-net ./nublar.ts",
     "dev": "deno fmt && deno lint && deno task test --fail-fast"
   }
