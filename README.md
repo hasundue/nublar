@@ -16,7 +16,7 @@ deno install --allow-read --allow-write --allow-env --allow-net https://deno.lan
 
 ## Usage
 
-```sh
+```
 $ dsm -h
 
   Usage:   dsm
