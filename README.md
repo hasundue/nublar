@@ -1,9 +1,9 @@
-# dsm - Deno Script Manager
+# nublar
 
 <!-- ![Test](https://github.com/hasundue/boilerplate-deno/actions/workflows/test.yml/badge.svg) -->
 <!-- [![codecov](https://codecov.io/gh/hasundue/boilerplate-deno/branch/main/graph/badge.svg?token=7BS432RAXB)](https://codecov.io/gh/hasundue/boilerplate-deno) -->
 
-A CLI utility to manage your scripts installed via `deno install`.
+Nublar is a CLI tool to manage your scripts installed via `deno install`.
 
 > **Warning**\
 > Still an alpha version.
@@ -11,15 +11,15 @@ A CLI utility to manage your scripts installed via `deno install`.
 ## Installation
 
 ```sh
-deno install --allow-read --allow-write --allow-env --allow-net https://deno.land/x/dsm@0.1.0/dsm.ts
+deno install --allow-read --allow-write --allow-env --allow-net https://deno.land/x/nublar@0.1.0/nublar.ts
 ```
 
 ## Usage
 
 ```
-$ dsm -h
+$ nublar -h
 
-  Usage:   dsm
+  Usage:   nublar
   Version: 0.1.0
 
   Description:
