@@ -1,7 +1,7 @@
 # dsm - Deno Script Manager
 
-![Test](https://github.com/hasundue/boilerplate-deno/actions/workflows/test.yml/badge.svg)
-[![codecov](https://codecov.io/gh/hasundue/boilerplate-deno/branch/main/graph/badge.svg?token=7BS432RAXB)](https://codecov.io/gh/hasundue/boilerplate-deno)
+<!-- ![Test](https://github.com/hasundue/boilerplate-deno/actions/workflows/test.yml/badge.svg) -->
+<!-- [![codecov](https://codecov.io/gh/hasundue/boilerplate-deno/branch/main/graph/badge.svg?token=7BS432RAXB)](https://codecov.io/gh/hasundue/boilerplate-deno) -->
 
 A CLI utility to manage your scripts installed via `deno install`.
 
