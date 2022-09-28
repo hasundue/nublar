@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths_ignore:
+      - '**.md'
+  workflow_dispatch:
 
 env:
   account_id: ${{ secrets.ACCOUNT_ID }}
