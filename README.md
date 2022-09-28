@@ -11,7 +11,7 @@ Nublar is a CLI tool to manage your scripts installed via `deno install`.
 ## Installation
 
 ```sh
-deno install --allow-read --allow-write --allow-env --allow-net https://deno.land/x/nublar@0.1.0/nublar.ts
+deno install --allow-read --allow-write --allow-env --allow-net https://deno.land/x/nublar@0.1.1/nublar.ts
 ```
 
 ## Usage
