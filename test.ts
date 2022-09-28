@@ -40,7 +40,7 @@ function withTestEnv(
 }
 
 async function nublar(args: string) {
-  const bin = Deno.build.os === "windows" ? "nublar.cmd" : "nublar";
+  const bin = Deno.build.os === "windows" ? "bin/nublar.cmd" : "bin/nublar";
   return await commandBuilder.command(bin + " " + args).text();
 }
 
