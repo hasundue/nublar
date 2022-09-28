@@ -18,22 +18,16 @@ deno install --allow-read --allow-write --allow-env --allow-net https://deno.lan
 ## :world_map: Usage
 
 ```
-$ nublar -h
+$ nublar list
 
-  Usage:   nublar
-  Version: 0.1.2
+nublar 0.1.2
+udd    0.5.0
 
-  Description:
+$ nublar update --dry-run
 
-    Deno Script Manager
+Found udd 0.5.0 => 0.7.5
 
-  Options:
+$ nublar update
 
-    -h, --help     - Show this help.
-    -V, --version  - Show the version number for this program.
-
-  Commands:
-
-    update  - Update all installed scripts
-    list    - list all installed scripts
+Updated udd 0.5.0 => 0.7.5
 ```
