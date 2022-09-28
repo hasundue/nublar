@@ -1,22 +1,77 @@
-import { assertEquals } from "https://deno.land/std@0.157.0/testing/asserts.ts";
-import $ from "https://deno.land/x/dax@0.12.0/mod.ts";
+import {
+  assertEquals,
+  assertMatch,
+  assertNotMatch,
+} from "https://deno.land/std@0.157.0/testing/asserts.ts";
+import { $, CommandBuilder } from "https://deno.land/x/dax@0.12.0/mod.ts";
 
-Deno.test("help", async () => {
-  const result = await $`deno task run --help`;
-  assertEquals(result.code, 0);
+const isWindows = Deno.build.os === "windows";
+const cwd = Deno.cwd();
+const commandBuilder = new CommandBuilder();
+
+async function installScripts(specs: [name: string, url: string][]) {
+  for (const spec of specs) {
+    await $`deno install -A --root . --name ${spec[0]} ${spec[1]}`.text();
+  }
+}
+
+async function createTestEnv() {
+  await installScripts([
+    ["nublar", "https://deno.land/x/nublar@0.1.2/nublar.ts"],
+    ["udd", "https://deno.land/x/udd@0.5.0/main.ts"],
+  ]);
+  await $`touch bin/deno`;
+}
+
+function withTestEnv(
+  name: string,
+  fn: () => void | Promise<void>,
+) {
+  Deno.test(name, async () => {
+    const tempDir = Deno.makeTempDirSync();
+    try {
+      Deno.chdir(tempDir);
+      await createTestEnv();
+      await fn();
+    } finally {
+      Deno.chdir(cwd);
+      Deno.removeSync(tempDir, { recursive: true });
+    }
+  });
+}
+
+async function nublar(args: string) {
+  const bin = isWindows ? "bin/nublar.cmd" : "bin/nublar";
+  return await commandBuilder.command(bin + " " + args).text();
+}
+
+withTestEnv("createTestEnv", async () => {
+  const expected = isWindows
+    ? ["deno", "nublar", "nublar.cmd", "udd", "udd.cmd"]
+    : ["deno", "nublar", "udd"];
+  assertEquals(
+    await $`ls bin`.lines(),
+    expected,
+  );
 });
 
-Deno.test("version", async () => {
-  const result = await $`deno task run --version`;
-  assertEquals(result.code, 0);
+withTestEnv("nublar", async () => {
+  assertMatch(
+    await nublar("--help"),
+    /nublar/,
+  );
 });
 
-Deno.test("list", async () => {
-  const result = await $`deno task run list`;
-  assertEquals(result.code, 0);
+withTestEnv("list", async () => {
+  const result = await nublar("list --root .");
+  assertMatch(result, /nublar/);
+  assertMatch(result, /udd/);
+  assertNotMatch(result, /deno/);
 });
 
-Deno.test("update", async () => {
-  const result = await $`deno task run update`;
-  assertEquals(result.code, 0);
+withTestEnv("update", async () => {
+  const result = await nublar("update --root .");
+  assertNotMatch(result, /nublar/);
+  assertMatch(result, /udd/);
+  assertNotMatch(result, /deno/);
 });

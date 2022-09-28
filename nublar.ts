@@ -7,7 +7,7 @@ import { udd } from "https://deno.land/x/udd@0.7.5/mod.ts";
 
 new Command()
   .name("nublar")
-  .version("0.1.0")
+  .version("0.1.2")
   .description("Deno Script Manager")
   .command(
     "update",
