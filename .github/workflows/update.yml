@@ -16,7 +16,7 @@ jobs:
       - name: Setup Deno
         uses: denoland/setup-deno@v1
         with:
-          deno-version: v1.x
+          deno-version: v1.25.4
 
       - name: Install udd
         run: deno install -A https://deno.land/x/udd/main.ts --name udd
