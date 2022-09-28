@@ -6,9 +6,6 @@
 `nublar` is a command-line tool to manage your scripts installed via
 `deno install`.
 
-> **Warning**\
-> Still an alpha version.
-
 ## :passenger_ship: Installation
 
 ```sh
