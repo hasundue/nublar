@@ -2,7 +2,7 @@ import {
   assertEquals,
   assertMatch,
   assertNotMatch,
-} from "https://deno.land/std@0.157.0/testing/asserts.ts";
+} from "https://deno.land/std@0.158.0/testing/asserts.ts";
 import { $, CommandBuilder } from "https://deno.land/x/dax@0.12.0/mod.ts";
 
 const isWindows = Deno.build.os === "windows";
@@ -18,7 +18,7 @@ async function installScripts(specs: [name: string, url: string][]) {
 async function createTestEnv() {
   await installScripts([
     ["nublar", "https://deno.land/x/nublar@0.1.2/nublar.ts"],
-    ["udd", "https://deno.land/x/udd@0.5.0/main.ts"],
+    ["udd", "https://deno.land/x/udd@0.7.5/main.ts"],
   ]);
   await $`touch bin/deno`;
 }
