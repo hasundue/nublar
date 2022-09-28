@@ -3,9 +3,10 @@ import {
   assertMatch,
   assertNotMatch,
 } from "https://deno.land/std@0.157.0/testing/asserts.ts";
-import $ from "https://deno.land/x/dax@0.12.0/mod.ts";
+import { $, CommandBuilder } from "https://deno.land/x/dax@0.12.0/mod.ts";
 
 const cwd = Deno.cwd();
+const commandBuilder = new CommandBuilder();
 
 async function installScripts(specs: [name: string, url: string][]) {
   for (const spec of specs) {
@@ -38,20 +39,34 @@ function withTestEnv(
   });
 }
 
+async function nublar(args: string) {
+  const bin = Deno.build.os === "windows" ? "nublar.cmd" : "nublar";
+  return await commandBuilder.command(bin + " " + args).text();
+}
+
 withTestEnv("createTestEnv", async () => {
-  const result = await $`ls bin`.lines();
-  assertEquals(result, ["deno", "nublar", "udd"]);
+  assertEquals(
+    await $`ls bin`.lines(),
+    ["deno", "nublar", "udd"],
+  );
+});
+
+withTestEnv("nublar", async () => {
+  assertMatch(
+    await nublar("--help"),
+    /nublar/,
+  );
 });
 
 withTestEnv("list", async () => {
-  const result = await $`bin/nublar list --root .`.text();
+  const result = await nublar("list --root .");
   assertMatch(result, /nublar/);
   assertMatch(result, /udd/);
   assertNotMatch(result, /deno/);
 });
 
 withTestEnv("update", async () => {
-  const result = await $`bin/nublar update --root .`.text();
+  const result = await nublar("update --root .");
   assertNotMatch(result, /nublar/);
   assertMatch(result, /udd/);
   assertNotMatch(result, /deno/);
