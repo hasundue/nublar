@@ -1,4 +1,5 @@
-import { join } from "https://deno.land/std@0.157.0/path/mod.ts";
+import { join, resolve } from "https://deno.land/std@0.157.0/path/mod.ts";
+import { ensureDir } from "https://deno.land/std@0.157.0/fs/mod.ts";
 import { Command } from "https://deno.land/x/cliffy@v0.25.1/command/mod.ts";
 import { Table } from "https://deno.land/x/cliffy@v0.25.1/table/mod.ts";
 import dir from "https://deno.land/x/dir@1.5.1/mod.ts";
@@ -28,7 +29,7 @@ interface GlobalOptions {
 }
 
 // ref: https://deno.land/manual@v1.25.4/tools/script_installer
-const getRoot = (options?: GlobalOptions): string => {
+const getRoot = (options: GlobalOptions): string => {
   const home = dir("home");
   const dotdeno = home ? join(home, ".deno") : undefined;
   const root = options?.root ?? Deno.env.get("DENO_INSTALL_ROOT") ?? dotdeno;
@@ -37,12 +38,16 @@ const getRoot = (options?: GlobalOptions): string => {
     console.error("Installation root is not defined");
     Deno.exit(1);
   } else {
+    ensureDir(root);
     return root;
   }
 };
 
-const getScriptDir = (options?: GlobalOptions): string =>
-  join(getRoot(options), "bin");
+const getScriptDir = (options: GlobalOptions): string => {
+  const scriptDir = join(getRoot(options), "bin");
+  ensureDir(scriptDir);
+  return scriptDir;
+};
 
 type Script = {
   name: string;
@@ -55,7 +60,7 @@ const getScriptList = (options: GlobalOptions): Script[] => {
   const scriptDir = getScriptDir(options);
   const scripts: Script[] = [];
 
-  for (const entry of Deno.readDirSync(scriptDir)) {
+  for (const entry of Deno.readDirSync(resolve(scriptDir))) {
     const content = Deno.readTextFileSync(join(scriptDir, entry.name));
     const versionMatch = content.match(/(?<=[a-z]@)[v?\d\.]+(?=\/)/);
 

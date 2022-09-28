@@ -12,11 +12,11 @@ Deno.test("version", async () => {
 });
 
 Deno.test("list", async () => {
-  const result = await $`deno task run list`;
+  const result = await $`deno task run list --root .`;
   assertEquals(result.code, 0);
 });
 
 Deno.test("update", async () => {
-  const result = await $`deno task run update`;
+  const result = await $`deno task run update --root .`;
   assertEquals(result.code, 0);
 });
