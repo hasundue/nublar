@@ -21,7 +21,7 @@ deno install --allow-read --allow-write --allow-env --allow-net https://deno.lan
 $ nublar -h
 
   Usage:   nublar
-  Version: 0.1.1
+  Version: 0.1.2
 
   Description:
 
