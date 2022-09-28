@@ -5,3 +5,18 @@ Deno.test("help", async () => {
   const result = await $`deno task run --help`;
   assertEquals(result.code, 0);
 });
+
+Deno.test("version", async () => {
+  const result = await $`deno task run --version`;
+  assertEquals(result.code, 0);
+});
+
+Deno.test("list", async () => {
+  const result = await $`deno task run list`;
+  assertEquals(result.code, 0);
+});
+
+Deno.test("update", async () => {
+  const result = await $`deno task run update`;
+  assertEquals(result.code, 0);
+});
