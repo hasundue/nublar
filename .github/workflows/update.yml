@@ -25,7 +25,7 @@ jobs:
         run: udd mod.ts | xargs -I {result} echo "UDD_RESULT={result}" >> $GITHUB_ENV
 
       - name: Create a pull request
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v4
         id: pr
         with:
           commit-message: "build(deps): update dependencies"
