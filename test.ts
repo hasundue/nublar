@@ -70,6 +70,13 @@ withTestEnv("list", async () => {
   assertNotMatch(result, /deno/);
 });
 
+withTestEnv("update --dry-run", async () => {
+  const result = await nublar("update --root . --dry-run");
+  assertNotMatch(result, /nublar/);
+  assertMatch(result, /udd/);
+  assertNotMatch(result, /deno/);
+});
+
 withTestEnv("update", async () => {
   const result = await nublar("update --root .");
   assertNotMatch(result, /nublar/);
