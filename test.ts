@@ -1,4 +1,5 @@
 import {
+  assertEquals,
   assertMatch,
   assertNotMatch,
 } from "https://deno.land/std@0.157.0/testing/asserts.ts";
@@ -36,6 +37,11 @@ function withTestEnv(
     }
   });
 }
+
+withTestEnv("createTestEnv", async () => {
+  const result = await $`ls bin`.lines();
+  assertEquals(result, ["deno", "nublar", "udd"]);
+});
 
 withTestEnv("list", async () => {
   const result = await $`bin/nublar list --root .`.text();
