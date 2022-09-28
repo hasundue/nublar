@@ -1,5 +1,5 @@
 import { join, resolve } from "https://deno.land/std@0.157.0/path/mod.ts";
-import { ensureDir } from "https://deno.land/std@0.157.0/fs/mod.ts";
+import { ensureDirSync } from "https://deno.land/std@0.157.0/fs/mod.ts";
 import { Command } from "https://deno.land/x/cliffy@v0.25.1/command/mod.ts";
 import { Table } from "https://deno.land/x/cliffy@v0.25.1/table/mod.ts";
 import dir from "https://deno.land/x/dir@1.5.1/mod.ts";
@@ -38,14 +38,14 @@ const getRoot = (options: GlobalOptions): string => {
     console.error("Installation root is not defined");
     Deno.exit(1);
   } else {
-    ensureDir(root);
+    ensureDirSync(root);
     return root;
   }
 };
 
 const getScriptDir = (options: GlobalOptions): string => {
   const scriptDir = join(getRoot(options), "bin");
-  ensureDir(scriptDir);
+  ensureDirSync(scriptDir);
   return scriptDir;
 };
 
