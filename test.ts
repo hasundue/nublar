@@ -5,6 +5,7 @@ import {
 } from "https://deno.land/std@0.157.0/testing/asserts.ts";
 import { $, CommandBuilder } from "https://deno.land/x/dax@0.12.0/mod.ts";
 
+const isWindows = Deno.build.os === "windows";
 const cwd = Deno.cwd();
 const commandBuilder = new CommandBuilder();
 
@@ -40,14 +41,17 @@ function withTestEnv(
 }
 
 async function nublar(args: string) {
-  const bin = Deno.build.os === "windows" ? "bin/nublar.cmd" : "bin/nublar";
+  const bin = isWindows ? "bin/nublar.cmd" : "bin/nublar";
   return await commandBuilder.command(bin + " " + args).text();
 }
 
 withTestEnv("createTestEnv", async () => {
+  const expected = isWindows
+    ? ["deno", "nublar", "nublar.cmd", "udd", "udd.cmd"]
+    : ["deno", "nublar", "udd"];
   assertEquals(
     await $`ls bin`.lines(),
-    ["deno", "nublar", "udd"],
+    expected,
   );
 });
 
