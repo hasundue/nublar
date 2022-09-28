@@ -41,8 +41,9 @@ function withTestEnv(
 }
 
 async function nublar(args: string) {
-  const bin = isWindows ? "bin/nublar.cmd" : "bin/nublar";
-  return await commandBuilder.command(bin + " " + args).text();
+  return await commandBuilder
+    .command(`deno run -A ${cwd}/nublar.ts ${args}`)
+    .text();
 }
 
 withTestEnv("createTestEnv", async () => {
