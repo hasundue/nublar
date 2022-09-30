@@ -19,7 +19,7 @@ $ nublar list
 nublar 0.1.2
 udd    0.5.0
 
-$ nublar update --dry-run
+$ nublar update --check
 Found udd 0.5.0 => 0.7.5
 
 $ nublar update

@@ -7,7 +7,7 @@ import { udd } from "https://deno.land/x/udd@0.7.5/mod.ts";
 
 new Command()
   .name("nublar")
-  .version("0.1.2")
+  .version("0.2.0")
   .description("Deno Script Manager")
   .command(
     "list",
@@ -20,7 +20,7 @@ new Command()
     "Update all installed scripts",
   )
   .option("--root <path>", "Installation root of scripts")
-  .option("-d, --dry-run", "Don't actually update")
+  .option("-d, --check", "Don't actually update")
   .action((options) => update(options))
   .parse();
 
@@ -86,7 +86,7 @@ const list = (options: GlobalOptions): void => {
 };
 
 type UpdateOptions = GlobalOptions & {
-  dryRun?: boolean;
+  check?: boolean;
 };
 
 const update = async (options: UpdateOptions): Promise<void> => {
@@ -94,13 +94,13 @@ const update = async (options: UpdateOptions): Promise<void> => {
 
   for (const script of scripts) {
     const results = await udd(script.path, {
-      dryRun: options?.dryRun,
+      dryRun: options?.check,
       quiet: true,
     });
 
     for (const result of results) {
       if (result.message) {
-        const action = options.dryRun ? "Found" : "Updated";
+        const action = options.check ? "Found" : "Updated";
         const newVersion = result.message!.match(/^[v\d\.]+/);
         console.log(
           `${action} ${script.name} ${script.version} => ${newVersion}`,
