@@ -10,18 +10,18 @@ new Command()
   .version("0.1.2")
   .description("Deno Script Manager")
   .command(
+    "list",
+    "list all installed scripts",
+  )
+  .option("--root <path>", "Installation root of scripts")
+  .action((options) => list(options))
+  .command(
     "update",
     "Update all installed scripts",
   )
   .option("--root <path>", "Installation root of scripts")
   .option("-d, --dry-run", "Don't actually update")
   .action((options) => update(options))
-  .command(
-    "list",
-    "list all installed scripts",
-  )
-  .option("--root <path>", "Installation root of scripts")
-  .action((options) => list(options))
   .parse();
 
 interface GlobalOptions {
