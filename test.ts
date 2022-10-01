@@ -17,7 +17,7 @@ async function installScripts(specs: [name: string, url: string][]) {
 
 async function createTestEnv() {
   await installScripts([
-    ["nublar", "https://deno.land/x/nublar@0.1.2/nublar.ts"],
+    ["nublar", "https://deno.land/x/nublar/nublar.ts"],
     ["udd", "https://deno.land/x/udd@0.5.0/main.ts"],
   ]);
   await $`touch bin/deno`;
@@ -74,12 +74,22 @@ withTestEnv("update --check", async () => {
   const result = await nublar("update --root . --check");
   assertNotMatch(result, /nublar/);
   assertMatch(result, /udd/);
-  assertNotMatch(result, /deno/);
+});
+
+withTestEnv("update --check udd", async () => {
+  const result = await nublar("update --root . --check udd");
+  assertNotMatch(result, /nublar/);
+  assertMatch(result, /udd/);
+});
+
+withTestEnv("update --check nublar", async () => {
+  const result = await nublar("update --root . --check nublar");
+  assertNotMatch(result, /nublar/);
+  assertNotMatch(result, /udd/);
 });
 
 withTestEnv("update", async () => {
   const result = await nublar("update --root .");
   assertNotMatch(result, /nublar/);
   assertMatch(result, /udd/);
-  assertNotMatch(result, /deno/);
 });
