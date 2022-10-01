@@ -8,20 +8,22 @@ import { udd } from "https://deno.land/x/udd@0.7.5/mod.ts";
 new Command()
   .name("nublar")
   .version("0.2.0")
-  .description("Deno Script Manager")
+  .description(
+    "A command-line tool to manage your Deno scripts installed via `deno install`.",
+  )
   .command(
     "list",
-    "list all installed scripts",
+    "List installed scripts.",
   )
-  .option("--root <path>", "Installation root of scripts")
+  .option("--root <path>", "Specify an installation root of scripts.")
   .action((options) => list(options))
   .command(
-    "update",
-    "Update all installed scripts",
+    "update [scripts...]",
+    "Update scripts.",
   )
-  .option("--root <path>", "Installation root of scripts")
-  .option("-d, --check", "Don't actually update")
-  .action((options) => update(options))
+  .option("--root <path>", "Installation root of scripts.")
+  .option("-d, --check", "Don't actually update.")
+  .action((options, ...scripts) => update(scripts, options))
   .parse();
 
 interface GlobalOptions {
@@ -89,8 +91,15 @@ type UpdateOptions = GlobalOptions & {
   check?: boolean;
 };
 
-const update = async (options: UpdateOptions): Promise<void> => {
-  const scripts = getScriptList(options);
+async function update(
+  scriptNames: string[],
+  options: UpdateOptions,
+): Promise<void> {
+  const all = getScriptList(options);
+
+  const scripts = scriptNames.length
+    ? all.filter((script) => scriptNames.find((name) => name === script.name))
+    : all;
 
   for (const script of scripts) {
     const results = await udd(script.path, {
@@ -108,4 +117,4 @@ const update = async (options: UpdateOptions): Promise<void> => {
       }
     }
   }
-};
+}

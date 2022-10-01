@@ -9,19 +9,25 @@
 ## :passenger_ship: Installation
 
 ```sh
-deno install --allow-read --allow-write --allow-env --allow-net https://deno.land/x/nublar@0.1.2/nublar.ts
+deno install --allow-read --allow-write --allow-env --allow-net https://deno.land/x/nublar@0.2.0/nublar.ts
 ```
 
 ## :world_map: Usage
 
-```
+```sh
+# list all scripts installed in your environment
 $ nublar list
-nublar 0.1.2
+nublar 0.2.0
 udd    0.5.0
 
+# check updates for them
 $ nublar update --check
 Found udd 0.5.0 => 0.7.5
 
+# update all outdated scripts
 $ nublar update
 Updated udd 0.5.0 => 0.7.5
+
+# or you may specify scripts to be updated
+$ nublar update udd
 ```
