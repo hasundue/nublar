@@ -10,6 +10,6 @@ jobs:
     name: Update
     runs-on: ubuntu-latest
     steps:
-      - uses: hasundue/denopendabot@0.4.1
+      - uses: hasundue/denopendabot@0.4.3
         with:
           token: ${{ secrets.GH_TOKEN }}
