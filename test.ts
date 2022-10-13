@@ -18,7 +18,7 @@ async function installScripts(specs: [name: string, url: string][]) {
 async function createTestEnv() {
   await installScripts([
     ["nublar", "https://deno.land/x/nublar/nublar.ts"],
-    ["udd", "https://deno.land/x/udd@0.8.0/main.ts"],
+    ["udd", "https://deno.land/x/udd@0.5.0/main.ts"], // @denopendabot ignore
   ]);
   await $`touch bin/deno`;
 }
