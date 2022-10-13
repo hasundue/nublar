@@ -1,0 +1,15 @@
+name: Update
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 23 * * *"
+
+jobs:
+  update:
+    name: Update
+    runs-on: ubuntu-latest
+    steps:
+      - uses: hasundue/denopendabot@0.4.0
+        with:
+          token: ${{ secrets.GH_TOKEN }}
