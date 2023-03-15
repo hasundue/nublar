@@ -2,6 +2,9 @@
 
 ![CI](https://github.com/hasundue/nublar/actions/workflows/ci.yml/badge.svg)
 [![codecov](https://codecov.io/gh/hasundue/nublar/branch/main/graph/badge.svg?token=7BS432RAXB)](https://codecov.io/gh/hasundue/nublar)
+![denoland/deno](https://img.shields.io/badge/Deno-v1.31.1-informational?logo=deno)
+
+<!-- @denopendabot denoland/deno -->
 
 `nublar` is a command-line tool to manage your scripts installed via
 `deno install`.
