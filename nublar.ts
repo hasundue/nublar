@@ -109,10 +109,15 @@ async function update(
   const all = getScriptList(options);
 
   const scripts = scriptNames.length
-    ? all.filter((script) => scriptNames.find((name) => name === script.name))
+    ? all.filter((script) => scriptNames.includes(script.name))
     : all;
 
+  let found = false;
+
   for (const script of scripts) {
+    if (!script.version) {
+      continue;
+    }
     const results = await udd(script.path, {
       dryRun: options?.check,
       quiet: true,
@@ -121,11 +126,15 @@ async function update(
     for (const result of results) {
       if (result.message) {
         const action = options.check ? "Found" : "Updated";
-        const newVersion = result.message!.match(/^[v\d\.]+/);
+        const newVersion = result.message.match(/^[v\d\.]+/);
         console.log(
           `${action} ${script.name} ${script.version} => ${newVersion}`,
         );
+        found = true;
       }
     }
+  }
+  if (!found) {
+    console.log("No updates found.");
   }
 }
