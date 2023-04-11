@@ -4,6 +4,8 @@ import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
 import { Table } from "https://deno.land/x/cliffy@v0.25.7/table/mod.ts";
 import dir from "https://deno.land/x/dir@1.5.1/mod.ts";
 import { udd } from "https://deno.land/x/udd@0.8.2/mod.ts";
+import { lookup, REGISTRIES } from "https://deno.land/x/udd@0.8.2/registry.ts";
+import { importUrls } from "https://deno.land/x/udd@0.8.2/search.ts";
 
 new Command()
   .name("nublar")
@@ -66,19 +68,25 @@ const getScriptList = (options: GlobalOptions): Script[] => {
     if (entry.name === "deno" || entry.name.startsWith(".")) {
       continue;
     }
-    const content = Deno.readTextFileSync(join(scriptDir, entry.name));
-    const versionMatch = content.match(/(?<=[a-z]@)[v?\d\.]+(?=\/)/);
+    const path = join(scriptDir, entry.name);
+    const content = Deno.readTextFileSync(path);
+    const urls = importUrls(content, REGISTRIES);
 
-    if (entry.name !== "deno" && !entry.name.startsWith(".")) {
-      scripts.push({
-        name: entry.name,
-        version: versionMatch ? versionMatch[0] : undefined,
-        path: join(scriptDir, entry.name),
-        content,
-      });
+    if (urls.length > 1) {
+      console.warn(`More than one importable URLs found in ${path}`);
     }
-  }
+    const registry = urls.length ? lookup(urls[0], REGISTRIES) : undefined;
 
+    if (urls.length && !registry) {
+      console.warn(`Unknown registry: ${urls[0]} in ${path}`);
+    }
+    scripts.push({
+      name: entry.name,
+      version: registry?.version(),
+      path,
+      content,
+    });
+  }
   return scripts;
 };
 
