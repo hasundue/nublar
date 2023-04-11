@@ -1,10 +1,12 @@
 # :national_park: nublar
 
+<!-- deno-fmt-ignore-start -->
+
 ![CI](https://github.com/hasundue/nublar/actions/workflows/ci.yml/badge.svg)
 [![codecov](https://codecov.io/gh/hasundue/nublar/branch/main/graph/badge.svg?token=7BS432RAXB)](https://codecov.io/gh/hasundue/nublar)
-![denoland/deno](https://img.shields.io/badge/Deno-v1.31.1-informational?logo=deno)
+![denoland/deno](https://img.shields.io/badge/Deno-v1.31.1-informational?logo=deno) <!-- @denopendabot denoland/deno -->
 
-<!-- @denopendabot denoland/deno -->
+<!-- deno-fmt-ignore-end -->
 
 `nublar` is a command-line tool to manage your scripts installed via
 `deno install`.
@@ -20,7 +22,7 @@ deno install --allow-read --allow-write --allow-env --allow-net https://deno.lan
 ```sh
 # list all scripts installed in your environment
 $ nublar list
-nublar 0.2.0
+nublar 0.2.0 <!-- @denopendabot hasundue/nublar -->
 udd    0.5.0
 
 # check updates for them
