@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  workflow_call:
+    outputs:
+      released:
+        description: true if released
+        value: ${{ jobs.release.outputs.released }}
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    outputs:
+      released: ${{ steps.run.outputs.released }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3.5.0
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.32.2 # @denopendabot denoland/deno
+
+      - name: Run denomantic-release
+        id: run
+        run: >
+          deno run -q --allow-env --allow-net --allow-write
+          https://deno.land/x/denomantic_release@0.8.1/cli.ts
+          ${{ github.repository }}
+          --token ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Denopendabot 
+        if: ${{ steps.run.outputs.needs_update }}
+        uses: ./
+        with:
+          mode: app
+          release: ${{ steps.run.outputs.version }}
+          auto-merge: any

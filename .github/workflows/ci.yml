@@ -19,32 +19,6 @@ jobs:
 
   release:
     name: Release
-    if: ${{ github.repository_owner == 'hasundue' }}
+    if: github.repository_owner == 'hasundue'
     needs: test
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.32.3 # @denopendabot denoland/deno
-
-      - name: Install ghlog
-        run: deno install -A https://pax.deno.dev/hasundue/ghlog/ghlog.ts 
-
-      - name: Generate Release Notes
-        run: ghlog ${{ github.repository }} -s | xargs -I {tag} echo "NEW_TAG={tag}" >> $GITHUB_ENV
-
-      - name: Create a release
-        id: release
-        if: ${{ env.NEW_TAG != 'UNRELEASED' }}
-        uses: ncipollo/release-action@v1
-        with:
-          tag: '${{ env.NEW_TAG }}'
-          name: '${{ env.NEW_TAG }}'
-          bodyFile: 'CHANGELOG.md'
-          draft: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+    uses: ./.github/workflows/release.yml
