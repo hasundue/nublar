@@ -22,7 +22,7 @@ deno install --allow-read --allow-write --allow-env --allow-net https://deno.lan
 ```sh
 # list all scripts installed in your environment
 $ nublar list
-nublar 0.2.0 <!-- @denopendabot hasundue/nublar -->
+nublar 0.2.2 <!-- @denopendabot hasundue/nublar -->
 udd    0.5.0
 
 # check updates for them
