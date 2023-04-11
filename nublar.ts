@@ -7,7 +7,7 @@ import { udd } from "https://deno.land/x/udd@0.8.2/mod.ts";
 
 new Command()
   .name("nublar")
-  .version("0.2.0")
+  .version("0.2.0") // @denopendabot hasundue/nublar
   .description(
     "A command-line tool to manage your Deno scripts installed via `deno install`.",
   )
