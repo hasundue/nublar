@@ -66,7 +66,7 @@ const getScriptList = (options: GlobalOptions): Script[] => {
     const content = Deno.readTextFileSync(join(scriptDir, entry.name));
     const versionMatch = content.match(/(?<=[a-z]@)[v?\d\.]+(?=\/)/);
 
-    if (entry.name !== "deno") {
+    if (entry.name !== "deno" && !entry.name.startsWith(".")) {
       scripts.push({
         name: entry.name,
         version: versionMatch ? versionMatch[0] : undefined,
