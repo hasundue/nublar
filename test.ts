@@ -2,8 +2,8 @@ import {
   assertEquals,
   assertMatch,
   assertNotMatch,
-} from "https://deno.land/std@0.185.0/testing/asserts.ts";
-import { $, CommandBuilder } from "https://deno.land/x/dax@0.31.0/mod.ts";
+} from "https://deno.land/std@0.186.0/testing/asserts.ts";
+import { $, CommandBuilder } from "https://deno.land/x/dax@0.31.1/mod.ts";
 
 const isWindows = Deno.build.os === "windows";
 const cwd = Deno.cwd();
