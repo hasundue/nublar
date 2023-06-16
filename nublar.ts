@@ -1,5 +1,5 @@
-import { join, resolve } from "https://deno.land/std@0.191.0/path/mod.ts";
-import { ensureDirSync } from "https://deno.land/std@0.191.0/fs/mod.ts";
+import { join, resolve } from "https://deno.land/std@0.192.0/path/mod.ts";
+import { ensureDirSync } from "https://deno.land/std@0.192.0/fs/mod.ts";
 import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
 import { Table } from "https://deno.land/x/cliffy@v0.25.7/table/mod.ts";
 import dir from "https://deno.land/x/dir@1.5.1/mod.ts";
