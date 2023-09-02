@@ -4,7 +4,7 @@
 
 ![CI](https://github.com/hasundue/nublar/actions/workflows/ci.yml/badge.svg)
 [![codecov](https://codecov.io/gh/hasundue/nublar/branch/main/graph/badge.svg?token=7BS432RAXB)](https://codecov.io/gh/hasundue/nublar)
-![denoland/deno](https://img.shields.io/badge/Deno-v1.36.3-informational?logo=deno) <!-- @denopendabot denoland/deno -->
+![denoland/deno](https://img.shields.io/badge/Deno-v1.36.4-informational?logo=deno) <!-- @denopendabot denoland/deno -->
 
 <!-- deno-fmt-ignore-end -->
 
