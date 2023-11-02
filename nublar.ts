@@ -82,7 +82,10 @@ async function getScriptList(options: GlobalOptions) {
     const path = join(scriptDir, entry.name);
     const content = await Deno.readTextFile(path);
     const urls = parseUrls(content);
-
+    if (urls.length === 0) {
+      console.warn(`No importable URLs found in ${path}`);
+      continue;
+    }
     if (urls.length > 1) {
       console.warn(`More than one importable URLs found in ${path}`);
     }
