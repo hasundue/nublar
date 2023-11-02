@@ -15,6 +15,9 @@ new Command()
   .description(
     "A command-line tool to manage your Deno scripts installed via `deno install`.",
   )
+  .action(function () {
+    this.showHelp();
+  })
   .command(
     "list",
     "List installed scripts.",
