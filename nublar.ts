@@ -57,9 +57,9 @@ async function getScriptDir(options: GlobalOptions) {
 type Script = {
   name: string;
   path: string;
-  url: URL;
-  version: string | undefined;
   content: string;
+  url?: URL;
+  version?: string;
 };
 
 function parseUrls(content: string): string[] {
@@ -83,7 +83,11 @@ async function getScriptList(options: GlobalOptions) {
     const content = await Deno.readTextFile(path);
     const urls = parseUrls(content);
     if (urls.length === 0) {
-      console.warn(`No importable URLs found in ${path}`);
+      scripts.push({
+        name: entry.name,
+        path,
+        content,
+      });
       continue;
     }
     if (urls.length > 1) {
@@ -124,8 +128,11 @@ async function update(
     : all;
   let found = false;
   for (const script of scripts) {
+    if (!script.url) {
+      continue;
+    }
     const latest = await Dependency.resolveLatestURL(script.url);
-    if (latest) {
+    if (latest && latest.href !== script.url.href) {
       found = true;
       const action = options.check ? "Found" : "Updated";
       const newVersion = parseSemVer(latest.href);
