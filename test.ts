@@ -28,14 +28,14 @@ function withTestEnv(
   fn: () => void | Promise<void>,
 ) {
   Deno.test(name, async () => {
-    const tempDir = Deno.makeTempDirSync();
+    const tempDir = await Deno.makeTempDir();
     try {
       Deno.chdir(tempDir);
       await createTestEnv();
       await fn();
     } finally {
       Deno.chdir(cwd);
-      Deno.removeSync(tempDir, { recursive: true });
+      await Deno.remove(tempDir, { recursive: true });
     }
   });
 }
