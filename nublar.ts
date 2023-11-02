@@ -1,5 +1,5 @@
 import { join, resolve } from "https://deno.land/std@0.205.0/path/mod.ts";
-import { ensureDirSync } from "https://deno.land/std@0.205.0/fs/ensure_dir.ts";
+import { ensureDir } from "https://deno.land/std@0.205.0/fs/ensure_dir.ts";
 import { assertExists } from "https://deno.land/std@0.205.0/assert/assert_exists.ts";
 import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
 import { Table } from "https://deno.land/x/cliffy@v0.25.7/table/mod.ts";
@@ -35,7 +35,7 @@ interface GlobalOptions {
 }
 
 // ref: https://deno.land/manual@v1.25.4/tools/script_installer
-const getRoot = (options: GlobalOptions): string => {
+async function getRoot(options: GlobalOptions) {
   const home = dir("home");
   const dotdeno = home ? join(home, ".deno") : undefined;
   const root = options?.root ?? Deno.env.get("DENO_INSTALL_ROOT") ?? dotdeno;
@@ -43,16 +43,16 @@ const getRoot = (options: GlobalOptions): string => {
     console.error("Installation root is not defined");
     Deno.exit(1);
   } else {
-    ensureDirSync(root);
+    await ensureDir(root);
     return root;
   }
-};
+}
 
-const getScriptDir = (options: GlobalOptions): string => {
-  const scriptDir = join(getRoot(options), "bin");
-  ensureDirSync(scriptDir);
+async function getScriptDir(options: GlobalOptions) {
+  const scriptDir = join(await getRoot(options), "bin");
+  await ensureDir(scriptDir);
   return scriptDir;
-};
+}
 
 type Script = {
   name: string;
@@ -62,7 +62,7 @@ type Script = {
   content: string;
 };
 
-const parseUrls = (content: string): string[] => {
+function parseUrls(content: string): string[] {
   const urls: string[] = [];
   const regexp = /https?:\/\/\S+/g;
   let match: RegExpExecArray | null;
@@ -70,17 +70,17 @@ const parseUrls = (content: string): string[] => {
     urls.push(match[0]);
   }
   return urls;
-};
+}
 
-const getScriptList = (options: GlobalOptions): Script[] => {
-  const scriptDir = getScriptDir(options);
+async function getScriptList(options: GlobalOptions) {
+  const scriptDir = await getScriptDir(options);
   const scripts: Script[] = [];
-  for (const entry of Deno.readDirSync(resolve(scriptDir))) {
+  for await (const entry of Deno.readDir(resolve(scriptDir))) {
     if (entry.name === "deno" || entry.name.startsWith(".")) {
       continue;
     }
     const path = join(scriptDir, entry.name);
-    const content = Deno.readTextFileSync(path);
+    const content = await Deno.readTextFile(path);
     const urls = parseUrls(content);
 
     if (urls.length > 1) {
@@ -97,15 +97,15 @@ const getScriptList = (options: GlobalOptions): Script[] => {
     });
   }
   return scripts;
-};
+}
 
-const list = (options: GlobalOptions): void => {
-  const scripts = getScriptList(options);
+async function list(options: GlobalOptions) {
+  const scripts = await getScriptList(options);
   const table = Table.from(
     scripts.map((script) => [script.name, script.version]),
   );
   console.log(table.toString());
-};
+}
 
 type UpdateOptions = GlobalOptions & {
   check?: boolean;
@@ -115,7 +115,7 @@ async function update(
   scriptNames: string[],
   options: UpdateOptions,
 ): Promise<void> {
-  const all = getScriptList(options);
+  const all = await getScriptList(options);
   const scripts = scriptNames.length
     ? all.filter((script) => scriptNames.includes(script.name))
     : all;
@@ -132,7 +132,7 @@ async function update(
       );
       if (!options.check) {
         const content = script.content.replace(script.url.href, latest.href);
-        Deno.writeTextFileSync(script.path, content);
+        await Deno.writeTextFile(script.path, content);
       }
     }
   }
