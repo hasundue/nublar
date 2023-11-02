@@ -2,7 +2,7 @@ import {
   assertEquals,
   assertMatch,
   assertNotMatch,
-} from "https://deno.land/std@0.205.0/testing/asserts.ts";
+} from "https://deno.land/std@0.205.0/assert/mod.ts";
 import { $, CommandBuilder } from "https://deno.land/x/dax@0.35.0/mod.ts";
 
 const isWindows = Deno.build.os === "windows";
@@ -72,7 +72,7 @@ withTestEnv("list", async () => {
 
 withTestEnv("update --check", async () => {
   const result = await nublar("update --root . --check");
-  assertNotMatch(result, /nublar/);
+  assertMatch(result, /nublar/);
   assertMatch(result, /udd/);
 });
 
@@ -84,12 +84,12 @@ withTestEnv("update --check udd", async () => {
 
 withTestEnv("update --check nublar", async () => {
   const result = await nublar("update --root . --check nublar");
-  assertNotMatch(result, /nublar/);
+  assertMatch(result, /nublar/);
   assertNotMatch(result, /udd/);
 });
 
 withTestEnv("update", async () => {
   const result = await nublar("update --root .");
-  assertNotMatch(result, /nublar/);
+  assertMatch(result, /nublar/);
   assertMatch(result, /udd/);
 });
