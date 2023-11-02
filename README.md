@@ -23,16 +23,16 @@ deno install --allow-read --allow-write --allow-env --allow-net https://deno.lan
 # list all scripts installed in your environment
 $ nublar list
 nublar 0.2.2 # @denopendabot hasundue/nublar
-udd    0.5.0
+molt    0.7.1
 
 # check updates for them
 $ nublar update --check
-Found udd 0.5.0 => 0.7.5
+Found molt 0.7.1 => 0.8.0
 
 # update all outdated scripts
 $ nublar update
-Updated udd 0.5.0 => 0.7.5
+Updated molt 0.7.1 => 0.8.0
 
 # or you may specify scripts to be updated
-$ nublar update udd
+$ nublar update molt
 ```
