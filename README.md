@@ -14,7 +14,7 @@
 ## :passenger_ship: Installation
 
 ```sh
-deno install --allow-read --allow-write --allow-env --allow-net https://deno.land/x/nublar@0.2.2/nublar.ts
+deno install --allow-read --allow-write --allow-env --allow-net https://deno.land/x/nublar@0.3.0/nublar.ts
 ```
 
 ## :world_map: Usage
@@ -22,7 +22,7 @@ deno install --allow-read --allow-write --allow-env --allow-net https://deno.lan
 ```sh
 # list all scripts installed in your environment
 $ nublar list
-nublar 0.2.2 # @denopendabot hasundue/nublar
+nublar 0.3.0 # @denopendabot hasundue/nublar
 molt    0.7.1
 
 # check updates for them
