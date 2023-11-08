@@ -1,13 +1,9 @@
 import { join, resolve } from "https://deno.land/std@0.205.0/path/mod.ts";
 import { ensureDir } from "https://deno.land/std@0.205.0/fs/ensure_dir.ts";
-import { assertExists } from "https://deno.land/std@0.205.0/assert/assert_exists.ts";
 import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
 import { Table } from "https://deno.land/x/cliffy@v0.25.7/table/mod.ts";
 import dir from "https://deno.land/x/dir@1.5.2/mod.ts";
-import {
-  Dependency,
-  parseSemVer,
-} from "https://deno.land/x/molt@0.11.0/lib/dependency.ts";
+import { Dependency } from "https://deno.land/x/molt@0.11.0/lib/dependency.ts";
 
 new Command()
   .name("nublar")
@@ -97,7 +93,7 @@ async function getScriptList(options: GlobalOptions) {
       console.warn(`More than one importable URLs found in ${path}`);
     }
     const url = new URL(urls[0]);
-    const props = Dependency.parseProps(url);
+    const props = Dependency.parse(url);
     scripts.push({
       name: entry.name,
       version: props.version,
@@ -134,17 +130,19 @@ async function update(
     if (!script.url) {
       continue;
     }
-    const latest = await Dependency.resolveLatestURL(script.url);
-    if (latest && latest.href !== script.url.href) {
+    const current = Dependency.parse(script.url);
+    const latest = await Dependency.resolveLatest(current);
+    if (latest && latest.version !== current.version) {
       found = true;
       const action = options.check ? "Found" : "Updated";
-      const newVersion = parseSemVer(latest.href);
-      assertExists(newVersion);
       console.log(
-        `${action} ${script.name} ${script.version} => ${newVersion}`,
+        `${action} ${script.name} ${script.version} => ${latest.version}`,
       );
       if (!options.check) {
-        const content = script.content.replace(script.url.href, latest.href);
+        const content = script.content.replace(
+          script.url.href,
+          Dependency.toURI(latest),
+        );
         await Deno.writeTextFile(script.path, content);
       }
     }
