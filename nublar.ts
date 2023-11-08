@@ -7,7 +7,7 @@ import dir from "https://deno.land/x/dir@1.5.2/mod.ts";
 import {
   Dependency,
   parseSemVer,
-} from "https://deno.land/x/molt@0.8.0/lib/dependency.ts";
+} from "https://deno.land/x/molt@0.11.0/lib/dependency.ts";
 
 new Command()
   .name("nublar")
