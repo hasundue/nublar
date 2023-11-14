@@ -35,7 +35,7 @@ jobs:
 
       - name: Run Denopendabot 
         if: ${{ steps.run.outputs.needs_update }}
-        uses: hasundue/denopendabot@0.17.2
+        uses: hasundue/denopendabot@0.18.0
         with:
           mode: app
           release: ${{ steps.run.outputs.version }}
