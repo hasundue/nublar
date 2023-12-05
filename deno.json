@@ -1,7 +1,9 @@
 {
   "tasks": {
+    "cache": "deno cache *.ts --lock",
+    "lock": "deno task -q cache --lock-write && git add deno.lock",
     "test": "deno test --allow-read --allow-write --allow-env --allow-net --allow-run",
     "run": "deno run --allow-read --allow-write --allow-env --allow-net ./nublar.ts",
-    "dev": "deno fmt && deno lint && deno task test --fail-fast"
+    "dev": "deno task -q lock && deno fmt && deno lint && deno task test --fail-fast"
   }
 }

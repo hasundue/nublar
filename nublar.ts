@@ -1,9 +1,9 @@
-import { join, resolve } from "https://deno.land/std@0.205.0/path/mod.ts";
-import { ensureDir } from "https://deno.land/std@0.205.0/fs/ensure_dir.ts";
+import { join, resolve } from "https://deno.land/std@0.208.0/path/mod.ts";
+import { ensureDir } from "https://deno.land/std@0.208.0/fs/ensure_dir.ts";
 import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
 import { Table } from "https://deno.land/x/cliffy@v0.25.7/table/mod.ts";
 import dir from "https://deno.land/x/dir@1.5.2/mod.ts";
-import { Dependency } from "https://deno.land/x/molt@0.11.0/lib/dependency.ts";
+import * as Dependency from "https://deno.land/x/molt@0.14.0/lib/dependency.ts";
 
 new Command()
   .name("nublar")
@@ -131,7 +131,7 @@ async function update(
       continue;
     }
     const current = Dependency.parse(script.url);
-    const latest = await Dependency.resolveLatest(current);
+    const latest = await Dependency.resolveLatestVersion(current);
     if (latest && latest.version !== current.version) {
       found = true;
       const action = options.check ? "Found" : "Updated";
@@ -141,7 +141,7 @@ async function update(
       if (!options.check) {
         const content = script.content.replace(
           script.url.href,
-          Dependency.toURI(latest),
+          Dependency.toUrl(latest),
         );
         await Deno.writeTextFile(script.path, content);
       }
