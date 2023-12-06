@@ -3,7 +3,7 @@ import { ensureDir } from "https://deno.land/std@0.208.0/fs/ensure_dir.ts";
 import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
 import { Table } from "https://deno.land/x/cliffy@v0.25.7/table/mod.ts";
 import dir from "https://deno.land/x/dir@1.5.2/mod.ts";
-import * as Dependency from "https://deno.land/x/molt@0.14.0/lib/dependency.ts";
+import * as Dependency from "https://deno.land/x/molt@0.14.2/lib/dependency.ts";
 
 new Command()
   .name("nublar")
