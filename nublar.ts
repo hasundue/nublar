@@ -108,7 +108,9 @@ async function getScriptList(options: GlobalOptions) {
 async function list(options: GlobalOptions) {
   const scripts = await getScriptList(options);
   const table = Table.from(
-    scripts.map((script) => [script.name, script.version]),
+    scripts.map((script) => [script.name, script.version])
+      // give scripts with definied version a higher priority
+      .sort(([_n1, _v1], [_n2, v2]) => v2 ? 1 : -1),
   );
   console.log(table.toString());
 }
