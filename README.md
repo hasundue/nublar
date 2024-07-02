@@ -4,7 +4,7 @@
 
 ![CI](https://github.com/hasundue/nublar/actions/workflows/ci.yml/badge.svg)
 [![codecov](https://codecov.io/gh/hasundue/nublar/branch/main/graph/badge.svg?token=7BS432RAXB)](https://codecov.io/gh/hasundue/nublar)
-![denoland/deno](https://img.shields.io/badge/Deno-v1.39.2-informational?logo=deno) <!-- @denopendabot denoland/deno -->
+![denoland/deno](https://img.shields.io/badge/Deno-v1.44.4-informational?logo=deno) <!-- @denopendabot denoland/deno -->
 
 <!-- deno-fmt-ignore-end -->
 
@@ -14,7 +14,7 @@
 ## :passenger_ship: Installation
 
 ```sh
-deno install --allow-read --allow-write --allow-env --allow-net https://deno.land/x/nublar@0.3.3/nublar.ts
+deno install --allow-read --allow-write --allow-env --allow-net https://deno.land/x/nublar@0.4.0/nublar.ts
 ```
 
 ## :world_map: Usage
@@ -22,7 +22,7 @@ deno install --allow-read --allow-write --allow-env --allow-net https://deno.lan
 ```sh
 # list all scripts installed in your environment
 $ nublar list
-nublar 0.3.3 # @denopendabot hasundue/nublar
+nublar 0.4.0 # @denopendabot hasundue/nublar
 molt    0.7.1
 
 # check updates for them
