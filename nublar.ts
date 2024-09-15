@@ -3,7 +3,8 @@ import { ensureDir } from "https://deno.land/std@0.211.0/fs/ensure_dir.ts";
 import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
 import { Table } from "https://deno.land/x/cliffy@v0.25.7/table/mod.ts";
 import dir from "https://deno.land/x/dir@1.5.2/mod.ts";
-import * as Dependency from "https://deno.land/x/molt@0.14.2/lib/dependency.ts";
+import { parse, stringify } from "jsr:@molt/core@0.19.8/specs";
+import { get } from "jsr:@molt/core@0.19.0/updates";
 
 new Command()
   .name("nublar")
@@ -63,7 +64,8 @@ type Script = {
 
 function parseUrls(content: string): string[] {
   const urls: string[] = [];
-  const regexp = /https?:\/\/\S+/g;
+  // match jsr or http pkgs
+  const regexp = /(https?:[^\'\"]+|jsr:@[^\'\"]+)/g;
   let match: RegExpExecArray | null;
   while ((match = regexp.exec(content))) {
     urls.push(match[0]);
@@ -93,10 +95,9 @@ async function getScriptList(options: GlobalOptions) {
       console.warn(`More than one importable URLs found in ${path}`);
     }
     const url = new URL(urls[0]);
-    const props = Dependency.parse(url);
     scripts.push({
       name: entry.name,
-      version: props.version,
+      version: parse(urls[0]).constraint,
       url,
       path,
       content,
@@ -132,18 +133,21 @@ async function update(
     if (!script.url) {
       continue;
     }
-    const current = Dependency.parse(script.url);
-    const latest = await Dependency.resolveLatestVersion(current);
-    if (latest && latest.version !== current.version) {
+
+    const current = parse(script.url.href);
+    const latest = await get(current);
+
+    const latestVersion = latest?.released ?? latest?.constrainted;
+    if (latestVersion && (latestVersion !== current.constraint)) {
       found = true;
       const action = options.check ? "Found" : "Updated";
       console.log(
-        `${action} ${script.name} ${script.version} => ${latest.version}`,
+        `${action} ${script.name} ${script.version} => ${latestVersion}`,
       );
       if (!options.check) {
         const content = script.content.replace(
           script.url.href,
-          Dependency.toUrl(latest),
+          stringify({ ...current, constraint: latestVersion }),
         );
         await Deno.writeTextFile(script.path, content);
       }
