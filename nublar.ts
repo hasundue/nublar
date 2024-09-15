@@ -3,8 +3,13 @@ import { ensureDir } from "https://deno.land/std@0.211.0/fs/ensure_dir.ts";
 import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
 import { Table } from "https://deno.land/x/cliffy@v0.25.7/table/mod.ts";
 import dir from "https://deno.land/x/dir@1.5.2/mod.ts";
-import { parse, stringify } from "jsr:@molt/core@0.19.8/specs";
+import {
+  DependencyKind,
+  DependencySpec,
+  stringify,
+} from "jsr:@molt/core@0.19.8/specs";
 import { get } from "jsr:@molt/core@0.19.0/updates";
+import { assert } from "jsr:@std/assert@1";
 
 new Command()
   .name("nublar")
@@ -156,4 +161,50 @@ async function update(
   if (!found) {
     console.log("No updates found.");
   }
+}
+
+const isKind = (kind: string): kind is DependencyKind =>
+  ["jsr", "npm", "http", "https"].includes(kind);
+export function parse(specifier: string): DependencySpec {
+  const url = new URL(specifier);
+
+  const kind = url.protocol.slice(0, -1);
+  assert(isKind(kind), `Invalid protocol: ${kind}:`);
+
+  const body = url.hostname + url.pathname;
+
+  // best effort to match name and path if version is not specified
+  if (!body.match(/@\d+/)) {
+    if (body.startsWith("deno.land/std/")) {
+      return {
+        kind,
+        name: "deno.land/std",
+        path: body.replace("deno.land/std", ""),
+        constraint: "",
+      };
+    }
+    if (body.startsWith("deno.land/x/")) {
+      return {
+        kind,
+        name: "deno.land/x",
+        path: body.replace("deno.land/x", ""),
+        constraint: "",
+      };
+    }
+    return { kind, name: body, constraint: "" };
+  }
+
+  // Try to find a path segment like "<name>@<version>/"
+  const matched = body.match(
+    /^(?<name>.+)@(?<constraint>[^/]+)(?<path>\/.*)?$/,
+  );
+  if (!matched) {
+    throw new Error(`Could not parse dependency: ${specifier}`);
+  }
+  const { name, constraint, path } = matched.groups as {
+    name: string;
+    constraint: string;
+    path?: string;
+  };
+  return path ? { kind, name, constraint, path } : { kind, name, constraint };
 }
