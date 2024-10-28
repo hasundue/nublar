@@ -3,7 +3,13 @@ import { ensureDir } from "https://deno.land/std@0.211.0/fs/ensure_dir.ts";
 import { Command } from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
 import { Table } from "https://deno.land/x/cliffy@v0.25.7/table/mod.ts";
 import dir from "https://deno.land/x/dir@1.5.2/mod.ts";
-import * as Dependency from "https://deno.land/x/molt@0.14.2/lib/dependency.ts";
+import {
+  DependencyKind,
+  DependencySpec,
+  stringify,
+} from "jsr:@molt/core@0.19.8/specs";
+import { get } from "jsr:@molt/core@0.19.0/updates";
+import { assert } from "jsr:@std/assert@1";
 
 new Command()
   .name("nublar")
@@ -63,7 +69,8 @@ type Script = {
 
 function parseUrls(content: string): string[] {
   const urls: string[] = [];
-  const regexp = /https?:\/\/\S+/g;
+  // match jsr or http pkgs
+  const regexp = /(https?:[^\'\"]+|jsr:@[^\'\"]+)/g;
   let match: RegExpExecArray | null;
   while ((match = regexp.exec(content))) {
     urls.push(match[0]);
@@ -93,10 +100,9 @@ async function getScriptList(options: GlobalOptions) {
       console.warn(`More than one importable URLs found in ${path}`);
     }
     const url = new URL(urls[0]);
-    const props = Dependency.parse(url);
     scripts.push({
       name: entry.name,
-      version: props.version,
+      version: parse(urls[0]).constraint,
       url,
       path,
       content,
@@ -132,18 +138,21 @@ async function update(
     if (!script.url) {
       continue;
     }
-    const current = Dependency.parse(script.url);
-    const latest = await Dependency.resolveLatestVersion(current);
-    if (latest && latest.version !== current.version) {
+
+    const current = parse(script.url.href);
+    const latest = await get(current);
+
+    const latestVersion = latest?.released ?? latest?.constrainted;
+    if (latestVersion && (latestVersion !== current.constraint)) {
       found = true;
       const action = options.check ? "Found" : "Updated";
       console.log(
-        `${action} ${script.name} ${script.version} => ${latest.version}`,
+        `${action} ${script.name} ${script.version} => ${latestVersion}`,
       );
       if (!options.check) {
         const content = script.content.replace(
           script.url.href,
-          Dependency.toUrl(latest),
+          stringify({ ...current, constraint: latestVersion }),
         );
         await Deno.writeTextFile(script.path, content);
       }
@@ -152,4 +161,50 @@ async function update(
   if (!found) {
     console.log("No updates found.");
   }
+}
+
+const isKind = (kind: string): kind is DependencyKind =>
+  ["jsr", "npm", "http", "https"].includes(kind);
+export function parse(specifier: string): DependencySpec {
+  const url = new URL(specifier);
+
+  const kind = url.protocol.slice(0, -1);
+  assert(isKind(kind), `Invalid protocol: ${kind}:`);
+
+  const body = url.hostname + url.pathname;
+
+  // best effort to match name and path if version is not specified
+  if (!body.match(/@\d+/)) {
+    if (body.startsWith("deno.land/std/")) {
+      return {
+        kind,
+        name: "deno.land/std",
+        path: body.replace("deno.land/std", ""),
+        constraint: "",
+      };
+    }
+    if (body.startsWith("deno.land/x/")) {
+      return {
+        kind,
+        name: "deno.land/x",
+        path: body.replace("deno.land/x", ""),
+        constraint: "",
+      };
+    }
+    return { kind, name: body, constraint: "" };
+  }
+
+  // Try to find a path segment like "<name>@<version>/"
+  const matched = body.match(
+    /^(?<name>.+)@(?<constraint>[^/]+)(?<path>\/.*)?$/,
+  );
+  if (!matched) {
+    throw new Error(`Could not parse dependency: ${specifier}`);
+  }
+  const { name, constraint, path } = matched.groups as {
+    name: string;
+    constraint: string;
+    path?: string;
+  };
+  return path ? { kind, name, constraint, path } : { kind, name, constraint };
 }
