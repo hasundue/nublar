@@ -13,7 +13,7 @@ import { assert } from "jsr:@std/assert@1";
 
 new Command()
   .name("nublar")
-  .version("0.3.3") // @denopendabot hasundue/nublar
+  .version("0.5.0") // @denopendabot hasundue/nublar
   .description(
     "A command-line tool to manage your Deno scripts installed via `deno install`.",
   )
