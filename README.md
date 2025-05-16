@@ -14,7 +14,7 @@
 ## :passenger_ship: Installation
 
 ```sh
-deno install --allow-read --allow-write --allow-env --allow-net https://deno.land/x/nublar@0.5.0/nublar.ts
+deno install --global --allow-read --allow-write --allow-env --allow-net https://deno.land/x/nublar@0.5.0/nublar.ts
 ```
 
 ## :world_map: Usage
